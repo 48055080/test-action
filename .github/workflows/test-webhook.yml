@@ -1,0 +1,18 @@
+name: Test Webhook Post
+
+on:
+  # 允许你从 Actions 页面手动触发此工作流
+  workflow_dispatch:
+
+jobs:
+  send_post_request:
+    runs-on: ubuntu-latest
+    steps:
+          - name: Send POST Request to Webhook
+            env:
+              # 从 GitHub Secrets 中读取您的 Webhook URL
+              WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+            run: |
+              # 使用 curl 命令发送一个 POST 请求
+              # 注意：如果您的服务器 SSL 证书有问题，可能需要添加 -k 或 --insecure
+              curl -X POST -H "Content-Type: application/json" -d '{"test_data": "This is a test from GitHub Actions", "timestamp": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')"}' "${{ env.WEBHOOK_URL }}"
